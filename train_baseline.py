@@ -111,7 +111,10 @@ def main():
 
     # Download ImageNet pretrained weights ONLY during training, not during evaluation.
     model = models.convnext_tiny(weights=models.ConvNeXt_Tiny_Weights.IMAGENET1K_V1)
-    model.classifier[2] = nn.Linear(model.classifier[2].in_features, 5)
+    model.classifier[2] = nn.Sequential(
+        nn.Dropout(p=0.4),
+        nn.Linear(model.classifier[2].in_features, 5)
+    )
     model.to(device)
     SAVE_PATH.parent.mkdir(parents=True, exist_ok=True)
     criterion = nn.CrossEntropyLoss(label_smoothing=0.05)

@@ -6,13 +6,14 @@ from torchvision import models, transforms
 
 NUM_CLASSES = 5
 
-
 def get_model():
     model = models.convnext_tiny(weights=None)
     in_features = model.classifier[2].in_features
-    model.classifier[2] = nn.Linear(in_features, NUM_CLASSES)
+    model.classifier[2] = nn.Sequential(
+        nn.Dropout(p=0.4),
+        nn.Linear(in_features, NUM_CLASSES)
+    )
     return model
-
 
 def get_transform():
     return transforms.Compose([
